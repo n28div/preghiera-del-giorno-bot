@@ -10,13 +10,13 @@ const https = require('https');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
-function sendMessage(chat_id, text) {
+function sendMessage(chatid, text) {
   const telegram_send_req = https.request({
     method: 'POST',
     host: 'api.telegram.org',
-    path: '/bot/' + process.env.TELEGRAM_TOKEN + 'sendMessage?chat_id=' + chat_id + "&text=" + encodeURIComponent(pray)
+    path: '/bot/' + process.env.TELEGRAM_TOKEN + 'sendMessage?chat_id=' + chatid + "&text=" + encodeURIComponent(text)
   }, (res) => {
-    console.log(`Sent "${text}" to id:${chat_id}`);
+    console.log(`Sent "${text}" to id:${chatid}`);
   });
   telegram_send_req.end();
 }
