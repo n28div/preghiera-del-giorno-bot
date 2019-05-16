@@ -29,14 +29,7 @@ function sendMessage(chatid, text) {
       'Content-Type': 'application/json',
     },
   }, (res) => {
-    let body = '';
-    res.on('data', function (d) {
-      body += d;
-    });
-
-    res.on('end', function () {
-      console.log(body);
-    });
+    console.log(`Sent ${text} to user id:${chatid}`);
   });
   
   telegramSendReq.write(JSON.stringify(requestBody));
