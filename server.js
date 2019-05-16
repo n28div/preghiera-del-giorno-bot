@@ -41,7 +41,7 @@ app.post('/telegram', (req, res) => {
 
       res.on('end', function () {
         // scraping of the site's content
-        const dom = new JSDOM(data);
+        const dom = new JSDOM(body);
         const pray = dom.window.document.querySelector('.entry-content div p').textContent.trim();
         sendMessage(chatId, `${churchEmoji} ${prayEmoji} \n\n ${pray} \n\n ${churchEmoji} ${prayEmoji}`);
       });
