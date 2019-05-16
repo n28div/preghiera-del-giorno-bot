@@ -10,23 +10,44 @@ const https = require('https');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
 
+const churchEmoji = '⛪';
+const prayEmoji = '🙏';
+const sadEmoji = '😔';
+const winkEmoji = '😉';
+
 function sendMessage(chatid, text) {
-  const telegram_send_req = https.request({
+  const requestBody = {
+    chat_id: chatid,
+    text: text
+  }
+  
+  const telegramSendReq = https.request({
     method: 'POST',
     host: 'api.telegram.org',
-    path: '/bot/' + process.env.TELEGRAM_TOKEN + 'sendMessage?chat_id=' + chatid + "&text=" + encodeURIComponent(text)
+    path: `/bot${process.env.TELEGRAM_TOKEN}/sendMessage`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }, (res) => {
-    console.log(`Sent "${text}" to id:${chatid}`);
+    let body = '';
+    res.on('data', function (d) {
+      body += d;
+    });
+
+    res.on('end', function () {
+      console.log(body);
+    });
   });
-  telegram_send_req.end();
+  
+  telegramSendReq.write(JSON.stringify(requestBody));
+  telegramSendReq.end();
 }
 
 app.post('/telegram', (req, res) => {
   const chatId = req.body.message.chat.id;
+  const username = req.body.message.chat.username;
   const textReceived = req.body.message.text;
-  const churchEmoji = '⛪';
-  const prayEmoji = '🙏'
-
+  
   const sendPray = https.request({
     method: 'POST',
     host: 'vaticanoweb.com',
@@ -50,7 +71,7 @@ app.post('/telegram', (req, res) => {
 
 
   if (textReceived.indexOf('amen') == -1) {
-    sendMessage(chatId, 'Non saprei cosa risponderti, ma se ci fosse un amen...');
+    sendMessage(chatId, `Caro ${username}..... non saprei cosa risponderti ${sadEmoji}........ ma se nel tuo messaggio ci fosse stato un amen.... ${winkEmoji}${winkEmoji}${winkEmoji}`);
   } else {
     sendPray.end();
   }
