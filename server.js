@@ -43,8 +43,8 @@ app.post('/telegram', (req, res) => {
   
   const sendPray = https.request({
     method: 'POST',
-    host: 'vaticanoweb.com',
-    path: '/preghiere/preghiera_del_giorno.asp'
+    host: 'vaticannews.va',
+    path: '/it/vangelo-del-giorno-e-parola-del-giorno.html'
   }, (res) => {
     let body = '';
 
@@ -56,7 +56,7 @@ app.post('/telegram', (req, res) => {
       res.on('end', function () {
         // scraping of the site's content
         const dom = new JSDOM(body);
-        const pray = dom.window.document.querySelector('.entry-content div p').textContent.trim();
+        const pray = dom.window.document.querySelector('section.section:nth-child(6) > div:nth-child(2) > div:nth-child(1) > p:nth-child(1)').textContent.trim();
         sendMessage(chatId, `${churchEmoji} ${prayEmoji} \n\n ${pray} \n\n ${churchEmoji} ${prayEmoji}`);
       });
     }
