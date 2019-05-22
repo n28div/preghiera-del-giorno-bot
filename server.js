@@ -6,9 +6,7 @@ app.use(bodyparser.json());
 
 const https = require('https');
 
-// jsdom is used to fetch from the sites html
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const prays = require('./preghiere.json');
 
 const churchEmoji = '⛪';
 const prayEmoji = '🙏';
@@ -39,34 +37,13 @@ function sendMessage(chatid, text) {
 app.post('/telegram', (req, res) => {
   const chatId = req.body.message.chat.id;
   const username = req.body.message.chat.username;
-  const textReceived = req.body.message.text.toLowerCase();
+  const textReceived = req.body.message.text;
   
-  const sendPray = https.request({
-    method: 'POST',
-    host: 'vaticannews.va',
-    path: '/it/vangelo-del-giorno-e-parola-del-giorno.html'
-  }, (res) => {
-    let body = '';
-
-    if (res.statusCode == 200) {
-      res.on('data', function (d) {
-        body += d;
-      });
-
-      res.on('end', function () {
-        // scraping of the site's content
-        const dom = new JSDOM(body);
-        const pray = dom.window.document.querySelector('section.section:nth-child(6) > div:nth-child(2) > div:nth-child(1) > p:nth-child(1)').textContent.trim();
-        sendMessage(chatId, `${churchEmoji} ${prayEmoji} \n\n ${pray} \n\n ${churchEmoji} ${prayEmoji}`);
-      });
-    }
-  });
-
-
   if (textReceived.indexOf('amen') == -1) {
     sendMessage(chatId, `Caro ${username}..... non saprei cosa risponderti ${sadEmoji}........ ma se nel tuo messaggio ci fosse stato un amen.... ${winkEmoji}${winkEmoji}${winkEmoji}`);
   } else {
-    sendPray.end();
+    let pray = prays[Math.floor(Math.random()*prays.length)];
+    sendMessage(chatId, `${churchEmoji} ${prayEmoji} \n\n ${pray} \n\n ${churchEmoji} ${prayEmoji}`);
   }
 
   res.end();
