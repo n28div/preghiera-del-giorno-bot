@@ -37,7 +37,7 @@ function sendMessage(chatid, text) {
 app.post('/telegram', (req, res) => {
   const chatId = req.body.message.chat.id;
   const username = req.body.message.chat.username;
-  const textReceived = req.body.message.text;
+  const textReceived = req.body.message.text.toLowerCase();
   
   if (textReceived.indexOf('amen') == -1) {
     sendMessage(chatId, `Caro ${username}..... non saprei cosa risponderti ${sadEmoji}........ ma se nel tuo messaggio ci fosse stato un amen.... ${winkEmoji}${winkEmoji}${winkEmoji}`);
