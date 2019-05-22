@@ -39,7 +39,7 @@ function sendMessage(chatid, text) {
 app.post('/telegram', (req, res) => {
   const chatId = req.body.message.chat.id;
   const username = req.body.message.chat.username;
-  const textReceived = req.body.message.text;
+  const textReceived = req.body.message.text.toLowerCase();
   
   const sendPray = https.request({
     method: 'POST',
